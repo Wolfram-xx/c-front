@@ -1,0 +1,12 @@
+C:\Users\tat64\Source\Repos\BlazorApplication\AppDomain\bin\Debug\net7.0\AppDomain.deps.json
+C:\Users\tat64\Source\Repos\BlazorApplication\AppDomain\bin\Debug\net7.0\AppDomain.dll
+C:\Users\tat64\Source\Repos\BlazorApplication\AppDomain\bin\Debug\net7.0\AppDomain.pdb
+C:\Users\tat64\Source\Repos\BlazorApplication\AppDomain\obj\Debug\net7.0\AppDomain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\tat64\Source\Repos\BlazorApplication\AppDomain\obj\Debug\net7.0\AppDomain.AssemblyInfoInputs.cache
+C:\Users\tat64\Source\Repos\BlazorApplication\AppDomain\obj\Debug\net7.0\AppDomain.AssemblyInfo.cs
+C:\Users\tat64\Source\Repos\BlazorApplication\AppDomain\obj\Debug\net7.0\AppDomain.csproj.CoreCompileInputs.cache
+C:\Users\tat64\Source\Repos\BlazorApplication\AppDomain\obj\Debug\net7.0\AppDomain.sourcelink.json
+C:\Users\tat64\Source\Repos\BlazorApplication\AppDomain\obj\Debug\net7.0\AppDomain.dll
+C:\Users\tat64\Source\Repos\BlazorApplication\AppDomain\obj\Debug\net7.0\refint\AppDomain.dll
+C:\Users\tat64\Source\Repos\BlazorApplication\AppDomain\obj\Debug\net7.0\AppDomain.pdb
+C:\Users\tat64\Source\Repos\BlazorApplication\AppDomain\obj\Debug\net7.0\ref\AppDomain.dll
