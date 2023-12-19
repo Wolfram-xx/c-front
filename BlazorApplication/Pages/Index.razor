@@ -1,0 +1,55 @@
+﻿@page "/"
+
+<PageTitle>Index</PageTitle>
+
+<style type="text/css">
+    body{
+        background-color: #2f026e;
+    }
+    #searchBox {
+        background-color: #760396;
+        border: 1px solid #ded9d9;
+        border-radius: 10px;
+        width: fit-content;
+        padding: 20px 40px;
+        margin-right: 50px;
+        float:right;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+    }
+
+    #searchPannel {
+        width: 60%;
+    }
+    #searchText{
+        color: white;
+    }
+    #searchText p{
+        margin: 0;
+    }
+</style>
+
+<div id="searchBox">
+    <div id="searchText">
+        <p>Поиск по группе:</p>
+    </div>
+    <div id="searchPannel">
+        <input type="text" @bind-value="@SearchTerm" class="form-control" />
+    </div>
+    
+</div>
+
+
+
+@if(SearchTerm == ""){
+<IndividualsListComponent/>
+} else{
+    <SearchByName MessageAdd=@SearchTerm />
+}
+
+
+@code {
+    string SearchTerm { get; set; } = "";
+}

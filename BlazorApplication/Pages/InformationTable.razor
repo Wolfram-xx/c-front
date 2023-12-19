@@ -1,0 +1,186 @@
+﻿@page "/informationTable/{Id:guid}"
+@using AppDomain.Model;
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+<style type="text/css">
+    body{
+        background-color: #2f026e;
+    }
+    #table_data {
+        background-color: rgba(255,255,255,0.2);
+        border: 1px solid rgba(255,255,255,0.5);
+        border-radius: 15px;
+        width: 1500px;
+        height: auto;
+        right:50%;
+        left:50%;
+        
+    }
+    th{
+        color: wheat;
+        border: 1px solid rgba(255,255,255,0.3);
+    }
+    tr{
+        border: 1px solid rgba(255,255,255,0.3);
+    }
+    td{
+        color: white;
+        border: 1px solid rgba(255,255,255,0.3);
+    }
+    tbody{
+        border: 1px solid rgba(255,255,255,0.3);
+        border: 1px solid rgba(255,255,255,0.3);
+    }
+    #btn{
+        margin:15px;
+    }
+
+</style>
+
+<PageTitle>Weather forecast</PageTitle>
+
+<h1 style="color: white">Id Группы: @Id</h1>
+
+
+@if (individual == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div id="table_data">
+        <button class="btn btn-outline-danger" type="button" @onclick="Delete_Click" id="btn">
+        Удалить
+    </button>
+        <button class="btn btn-outline-info" type="button" @onclick="Update_Click" id="btn">
+        Изменить
+    </button>
+    <table class="table" border="1">
+        <thead>
+            <tr>
+                <th align="center">ID</th>
+                <th align="center">@individual.Id</th>
+            </tr>
+        </thead>
+        <thead>
+            <tr>
+                <th colspan="2", align="center">Информация о группе</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td> Номер группы </td>
+                <td>@individual.InformationDto.Name</td>
+            </tr>
+            <tr>
+                <td> Факультет </td>
+                <td>@individual.InformationDto.Gender</td>
+            </tr>
+            <tr>
+                <td> Кафедра </td>
+                <td>@individual.InformationDto.Phone</td>
+            </tr>
+            <tr>
+                <td> Код направления </td>
+                <td>@individual.InformationDto.Email</td>
+            </tr>
+        </tbody>
+        <tbody>
+            @foreach (var education in individual.EducationsDtOs)
+            {
+                <tr>
+                    <td> Заведующий кафедрой </td>
+                    <td>@education.Type</td>
+                </tr>
+                <tr>
+                    <td> Куратор группы </td>
+                    <td>@education.Institution</td>
+                </tr>
+                <tr>
+                    <td> Дата окончания обучения </td>
+                    <td>@education.Date.ToString("dd/MM/yyyy")</td>
+                </tr>
+            }
+        </tbody>
+
+        <tbody>
+            @foreach (var job in individual.JobsDtOs)
+            {
+                <tr>
+                    <td> Курс </td>
+                    <td>@job.Position</td>
+                </tr>
+                <tr>
+                    <td> Семестр </td>
+                    <td>@job.Organization</td>
+                </tr>
+            }
+        </tbody>
+       
+        
+        <thead>
+            <tr>
+                <th colspan="2" align="center">Список Дисциплин</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var document in individual.DocumentsDtOs)
+            {
+                <tr align="center">
+                        <td colspan="2" style="background-color:#2f026e">   </td>
+                </tr>
+                <tr>
+                    <td> Название дисциплины </td>
+                    <td>@document.DocumentName</td>
+                </tr>
+                <tr>
+                    <td> ФИО Преподавателя </td>
+                    <td>@document.DocumentNumber</td>
+                </tr>
+            }
+        </tbody>
+        
+    </table>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    public int educationCount = 0;
+    public int jobsCount = 0;
+    public int documentsCount = 0;
+}
+
+@code {
+    private Individual individual;
+
+    protected override async Task OnParametersSetAsync() =>
+        individual = await Http.GetFromJsonAsync<Individual>
+            ($"https://localhost:7279/api/Individual/{Id}");
+
+    protected override async Task OnInitializedAsync()
+    {
+        individual = await Http.GetFromJsonAsync<Individual>
+            ($"https://localhost:7279/api/Individual/{Id}");
+    }
+
+
+}
+
+@code {
+
+    protected async Task Delete_Click()
+    {
+        await Http.DeleteAsync($"https://localhost:7279/api/Individual/{Id}");
+        Navigation.NavigateTo("/");
+    }
+
+    protected async Task Update_Click()
+    {
+        Navigation.NavigateTo($"/editIndividual/{individual.Id}");
+    }
+}
+

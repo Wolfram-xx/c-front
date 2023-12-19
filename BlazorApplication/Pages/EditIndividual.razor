@@ -1,0 +1,348 @@
+﻿@page "/editIndividual/{Id:guid}"
+@using AppDomain.Model;
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Forms
+@inject HttpClient Http
+
+<style type="text/css">
+    body {
+        background-color: #2f026e;
+    }
+
+    #allforms {
+        background-color: rgba(255,255,255,0.2);
+        border: 1px solid rgba(255,255,255,0.5);
+        border-radius: 15px;
+        width: 1100px;
+        height: auto;
+        float: left;
+        color: white;
+    }
+
+    #edit_form {
+        width: 1100px;
+        float: left;
+    }
+
+    td {
+        color: white;
+    }
+
+    th {
+        color: white;
+    }
+
+    #element {
+        padding: 15px;
+        float: left;
+    }
+
+    #result {
+        background-color: rgba(255,255,255,0.2);
+        border: 1px solid rgba(255,255,255,0.5);
+        border-radius: 15px;
+        float: right;
+        margin-right: 30px;
+        width: 450px;
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+
+    #btnSubmit {
+        margin: 15px
+    }
+</style>
+
+<div id="allforms">
+    <div id="edit_form">
+        <div id="element">
+            <EditForm Model="@info">
+                <p>
+                    <b>Информация о группе</b>
+                </p>
+                <p>
+                    Номер группы:<br />
+                    <InputText id="name" @bind-Value="info.Name" class="form-control" />
+                </p>
+                <p>
+                    Факультет:<br />
+                    <InputText id="gender" @bind-Value="info.Gender" class="form-control" />
+                </p>
+                <p>
+                    Кафедра:<br />
+                    <InputText id="phone" @bind-Value="info.Phone" class="form-control" />
+                </p>
+                <p>
+                    Код направления:<br />
+                    <InputText id="email" @bind-Value="info.Email" class="form-control" />
+                </p>
+
+            </EditForm>
+        </div>
+        <div id="element">
+            <EditForm Model="@education" OnSubmit="@(e=>{listEducation.Add(education);
+                education = new EducationsDto();})">
+                
+                <p>
+                    Заведующий кафедрой:<br />
+                    <InputText id="type" @bind-Value="education.Type" class="form-control" />
+                </p>
+                <p>
+                    Куратор:<br />
+                    <InputText id="number" @bind-Value="education.Institution" class="form-control" />
+                </p>
+                <p>
+                    Дата окончения обучения:<br />
+                    <InputDate id="number" @bind-Value="education.Date" class="form-control" />
+                </p>
+                <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+            </EditForm>
+        </div>
+        <div id="element">
+            <EditForm Model="@job" OnSubmit="@(e=>{listJobs.Add(job);
+                job = new JobsDto();})">
+                
+                <p>
+                    Курс:<br />
+                    <InputText id="position" @bind-Value="job.Position" class="form-control" />
+                </p>
+                <p>
+                    Семестр:<br />
+                    <InputText id="organization" @bind-Value="job.Organization" class="form-control" />
+                </p>
+                <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+            </EditForm>
+        </div>
+       
+    </div>
+    <div id="edit_form">
+        <div id="element">
+            <EditForm Model="@document" OnSubmit="@(e=>{listDocuments.Add(document);
+                    document=new DocumentsDto();})">
+                <p>
+                    <b>Дисциплины</b>
+                </p>
+                <p>
+                    Название дисциплины:<br />
+                    <InputText id="name" @bind-Value="document.DocumentName" class="form-control" />
+                </p>
+                <p>
+                    ФИО Преподавателя:<br />
+                    <InputText id="number" @bind-Value="document.DocumentNumber" class="form-control" />
+                </p>
+                <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+            </EditForm>
+        </div>
+       
+        
+        
+        <div style="color:red;" float="left">@message</div>
+    </div>
+    <button type="button" id="btnSubmit" class="btn btn-outline-success" @onclick="submitAll">Подтвердить</button>
+
+</div>
+
+<div id="result">
+    <table class="table">
+        <thead>
+            <tr align="center">
+                <th colspan="2">Результат</th>
+            </tr>
+        </thead>
+        <thead>
+            <tr>
+                <th colspan="2">Информация о группе</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Номер группы </td>
+                <td>@info.Name</td>
+            </tr>
+            <tr>
+                <td> Факультет </td>
+                <td>@info.Gender</td>
+            </tr>
+            <tr>
+                <td> Кафедра </td>
+                <td>@info.Phone</td>
+            </tr>
+            <tr>
+                <td> Код направления </td>
+                <td>@info.Email</td>
+            </tr>
+        </tbody>
+        
+        <tbody>
+            @foreach (var education in listEducation)
+            {
+                <tr>
+                    <td> Заведующий кафедрой </td>
+                    <td>@education.Type</td>
+                </tr>
+                <tr>
+                    <td> Куратор группы </td>
+                    <td>@education.Institution</td>
+                </tr>
+                <tr>
+                    <td> Дата окончания обучения </td>
+                    <td>@education.Date.ToString("dd/MM/yyyy")</td>
+                </tr>
+                <button type="button" id="btnSubmit" class="btn btn-secondary btn-sm"
+                @onclick="@(e=>listEducation.Remove(education))">
+                    Удалить
+                </button>
+            }
+        </tbody>
+        
+        <tbody>
+            @foreach (var job in listJobs)
+            {
+                <tr>
+                    <td> Курс </td>
+                    <td>@job.Position</td>
+                </tr>
+                <tr>
+                    <td> Семестр </td>
+                    <td>@job.Organization</td>
+                </tr>
+                <button type="button" id="btnSubmit" class="btn btn-secondary btn-sm"
+                @onclick="@(e=>listDocuments.Remove(document))">
+                    Удалить
+                </button>
+            }
+        </tbody>
+       
+       
+        <thead>
+            <tr>
+                <th colspan="2">Дисциплины</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var document in listDocuments)
+            {
+                <tr>
+                    <td> Название дисциплины </td>
+                    <td>@document.DocumentName</td>
+                </tr>
+                <tr>
+                    <td> ФИО Преподавателя </td>
+                    <td>@document.DocumentNumber</td>
+                </tr>
+                    <button type="button" id="btnSubmit" class="btn btn-secondary btn-sm" 
+                            @onclick="@(e=>listDocuments.Remove(document))">
+                        Удалить</button>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+@code {
+
+    [Parameter]
+    public Guid Id { get; set; }
+
+    Individual individual = new Individual();
+
+    protected override async Task OnInitializedAsync()
+    {
+        individual = await Http.GetFromJsonAsync<Individual>
+            ($"https://localhost:7279/api/Individual/{Id}");
+
+        info = individual.InformationDto;
+
+        listEducation = individual.EducationsDtOs;
+
+        listJobs = individual.JobsDtOs;
+
+        address = individual.PersonAddressDto;
+
+        listDocuments = individual.DocumentsDtOs;
+
+        rusPassport = individual.RussianPassportDto;
+        foreignPassport = individual.ForeignPassportDto;
+        intPassport = individual.InternationalPassportDto;
+    }
+
+    string message = "";
+
+    async Task submitAll()
+    {
+        foreach (var education in listEducation)
+        {
+            if (education.Id == null) education.Id  = Guid.NewGuid();
+        }
+        foreach (var job in listJobs)
+        {
+            if (job.Id == null) job.Id = Guid.NewGuid();
+        }
+
+        foreach (var document in listDocuments)
+        {
+            if (document.Id == null) document.Id = Guid.NewGuid();
+        }
+
+        individual.InformationDto = info;
+        individual.EducationsDtOs = listEducation;
+        individual.JobsDtOs = listJobs;
+        individual.PersonAddressDto = address;
+        individual.DocumentsDtOs = listDocuments;
+        individual.RussianPassportDto = rusPassport;
+        individual.InternationalPassportDto = intPassport;
+        individual.ForeignPassportDto = foreignPassport;
+
+        await PutASJson(individual);
+    }
+
+
+    protected async Task PutASJson(Individual individual)
+    {
+        var response = await Http.PutAsJsonAsync<Individual>($"https://localhost:7279/api/Individual/{Id}", individual);
+        if (response.IsSuccessStatusCode)
+        {
+            message = $"Объект Individual с id = {individual.Id} успешно обновлен";
+        }
+    }
+
+    class Error
+    {
+        public string Details { get; set; } = "";
+    }
+
+    InformationDto info = new InformationDto();
+
+    EducationsDto education = new EducationsDto();
+    List<EducationsDto> listEducation = new List<EducationsDto>();
+
+    JobsDto job = new JobsDto();
+    List<JobsDto> listJobs = new List<JobsDto>();
+
+    PersonAddressDto address = new PersonAddressDto();
+
+    DocumentsDto document = new DocumentsDto();
+    List<DocumentsDto> listDocuments = new List<DocumentsDto>();
+
+    RussianPassportDto rusPassport = new RussianPassportDto();
+    ForeignPassportDto foreignPassport = new ForeignPassportDto();
+    InternationalPassportDto intPassport = new InternationalPassportDto();
+
+    public int educationCount = 0;
+    public int jobsCount = 0;
+    public int documentsCount = 0;
+
+    public int IncrementCountEducation()
+    {
+        return educationCount++;
+    }
+    public int IncrementCountJobs()
+    {
+        return jobsCount++;
+    }
+    public int IncrementDocument()
+    {
+        return documentsCount++;
+    }
+}
